@@ -14,11 +14,13 @@ const parameters = {
     primaryKeyUrl: process.env.IOTC_KEY_URL
 };
 
+var iotHubOutputSinkName = 'iotcdbinput'// This variable name should be the name of the output sink for Azure Fucntion in the stream analytics job
+
 let kvToken;
 
 module.exports = async function (context, req) {
     try {
-        await handleMessage({ ...parameters, log: context.log, getSecret: getKeyVaultSecret }, req.body.device, req.body.measurements, req.body.timestamp);
+        await handleMessage({ ...parameters, log: context.log, getSecret: getKeyVaultSecret }, req.body[0][iotHubOutputSinkName].device, req.body[0][iotHubOutputSinkName].measurements, req.body[0][iotHubOutputSinkName].timestamp);
     } catch (e) {
         context.log('[ERROR]', e.message);
 
